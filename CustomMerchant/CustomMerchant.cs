@@ -59,22 +59,31 @@ namespace CustomMerchant
 		}
 		#endregion
 
+		// Command executes the function to change the Traveling Merchant's shop inventory
+		// by sending the Traveling Merchant inventory packet (72).
+		// https://tshock.readme.io/docs/multiplayer-packet-structure#travelling-merchant-inventory-72
 		private void ChangeMerchantInventory(CommandArgs args)
 		{
+			// Merchant has 40 slots in shop inventory
+			int slots = 40;
+			
+			// Resets the Merchant's inventory to "default"
 			if (args.Parameters[0].Equals("test"))
 			{
 				Chest.SetupTravelShop();
 			}
 			else
 			{
+				// Loop through inventory and set each slot to ID: 1 (iron pickaxe)
 				var inventory = Main.travelShop;
-				for (int index = 0; index < 40; index++)
+				for (int index = 0; index < slots; index++)
 				{
 					inventory[index] = 1;
 				}
 			}
 
-			for (int index = 0; index < 40; index++)
+			// Send the packet to update each Merchant inventory slot
+			for (int index = 0; index < slots; index++)
 			{
 				NetMessage.SendData((int)PacketTypes.TravellingMerchantInventory, -1, -1, NetworkText.Empty, index);
 			}
